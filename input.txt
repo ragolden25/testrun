@@ -1,0 +1,25 @@
+Split the Grafana quarterly build into one role per component: 
+quarterly_build_grafana, quarterly_build_prometheus, quarterly_build_idrac and quarterly_build_nginx_grafana. 
+They share the steps in quarterly_common: detect version, build, save/deliver, scan, sign and fallback.
+
+If a component fails, it falls back to its last good version, reusing the previous quarter’s 
+signed images and scan results. The fallback is recorded in fallback.env, and the stack still releases.
+build_grafana_stack.yml now runs stack prepare, then the four component roles, then stack finish. 
+
+Finish writes versions.env, fallback.env and the pipeline dashboard metrics.
+All .asc signatures are now in provenance/signatures. 
+
+The ccop/, nucleus/ and container-forge/ folders are cleared on each build, so provenance holds only that run’s scans.
+
+Tested with a throwaway quarter: grafana, prometheus and nginx built, and idrac was forced to fail and fell back correctly. 
+All signatures verified, and the current quarter was left unchanged. The test quarter has been removed.
+
+Added the grafana12-deploy Molecule scenario, which deploys the nucleus images on std1 for real. It checks:
+containers and image versions
+
+Grafana health, datasource, dashboards and alert rules
+at least one Prometheus target up
+nginx TLS and the port 80 → 443 redirect
+firewall rules
+The CIS Docker benchmark runs at deployment, and its results are copied back to provenance/nucleus.
+Firewall hardening: http/https are allowed, 3000/9191 are closed, and Docker restarts when the firewall changes so its rules don’t go stale.

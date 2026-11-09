@@ -1,0 +1,118 @@
+TASK [Grafana through nginx (TLS and proxy)] ***********************************
+ok: [std1]
+
+TASK [Plain HTTP is redirected to HTTPS] ***************************************
+ok: [std1]
+
+TASK [Firewall services] *******************************************************
+ok: [std1]
+
+TASK [CIS Docker Benchmark report copied back by the role] *********************
+ok: [std1 -> localhost]
+
+TASK [Everything came up and loaded its config] ********************************
+fatal: [std1]: FAILED! => {
+    "assertion": "'http' in fw.stdout.split() and 'https' in fw.stdout.split()",
+    "changed": false,
+    "evaluated_to": false,
+    "msg": "grafana_health={'database': 'ok', 'version': '12.4.14', 'commit': '3c98af3b'} via_nginx={'database': 'ok', 'version': '12.4.14', 'commit': '3c98af3b'} http_redirect=301 https://std1.pt69.ccop.dev/ prometheus_config=success prometheus_targets=7 idrac_metrics_http=400 datasources=['ds-prometheus'] dashboards=['Nucleus IDRAC Servers', 'Nucleus Linux Servers', 'Nucleus Windows Servers'] alert_rules=18 datasource_health={'details': {'application': 'Prometheus', 'features': {'rulerApiEnabled': False}}, 'message': 'Successfully queried the Prometheus API.', 'status': 'OK'} firewall=cockpit dhcpv6-client ssh cis_reports=['docker_cis_report-std1-20261109-1409.csv']"
+}
+
+TASK [Container logs for the failed run] ***************************************
+ok: [std1] => (item=grafana)
+ok: [std1] => (item=prometheus)
+ok: [std1] => (item=nginx)
+ok: [std1] => (item=idrac_exporter)
+
+TASK [Show the logs] ***********************************************************
+ok: [std1] => (item=grafana) => {
+    "msg": [
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.512408499Z level=info msg=starting module=*ssosettingsimpl.Service",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.512440262Z level=info msg=starting module=*anonimpl.AnonDeviceService",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.512586144Z level=info msg=starting module=*service.UsageStats",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.51308222Z level=info msg=starting module=*ngalert.AlertNG",
+        "logger=ngalert t=2026-11-09T19:08:57.513165467Z level=info msg=\"Primary node, alert rule evaluation enabled\"",
+        "logger=ngalert.state.manager t=2026-11-09T19:08:57.513209894Z level=info msg=\"Warming state cache for startup\"",
+        "logger=ngalert.state.manager t=2026-11-09T19:08:57.515180613Z level=info msg=\"State cache has been initialized\" states=0 duration=1.968115ms",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.515233017Z level=info msg=starting module=*metric.Service",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.515515682Z level=info msg=starting module=*loginattemptimpl.Service",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.515567995Z level=info msg=starting module=*cleanup.CleanUpService",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.515724144Z level=info msg=starting module=*migrations.SecretMigrationProviderImpl",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.540424574Z level=info msg=starting module=*store.standardStorageService",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.540478614Z level=info msg=starting module=*api.HTTPServer",
+        "logger=grafanaStorageLogger t=2026-11-09T19:08:57.540581608Z level=info msg=\"Storage starting\"",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.540619881Z level=info msg=starting module=*service.DashboardUpdater",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.541420902Z level=info msg=starting module=*dynamic.KeyRetriever",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.543367673Z level=info msg=starting module=*metrics.InternalMetricsService",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.543481346Z level=info msg=starting module=*supportbundlesimpl.Service",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.511949143Z level=info msg=starting module=*updatemanager.GrafanaService",
+        "logger=http.server t=2026-11-09T19:08:57.546653517Z level=info msg=\"HTTP Server Listen\" address=[::]:3000 protocol=http subUrl= socket=",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.546821698Z level=info msg=starting module=*service.DashboardServiceImpl",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.546945146Z level=info msg=starting module=*updatemanager.PluginsService",
+        "logger=ngalert.multiorg.alertmanager t=2026-11-09T19:08:57.547534305Z level=info msg=\"Starting MultiOrg Alertmanager\"",
+        "logger=ngalert.scheduler t=2026-11-09T19:08:57.547625419Z level=info msg=\"Starting scheduler\" tickInterval=10s maxAttempts=3",
+        "logger=ngalert.scheduler t=2026-11-09T19:08:57.547728082Z level=info msg=starting component=ticker first_tick=2026-11-09T19:09:00Z",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.540453015Z level=info msg=starting module=*appregistry.Service",
+        "logger=app-registry t=2026-11-09T19:08:57.548704705Z level=info msg=\"app registry initialized\"",
+        "logger=sqlstore.transactions t=2026-11-09T19:08:57.550897822Z level=info msg=\"Database locked, sleeping then retrying\" error=\"database is locked (5) (SQLITE_BUSY)\" retry=0",
+        "logger=backgroundsvcs.managerAdapter t=2026-11-09T19:08:57.550955666Z level=info msg=\"All modules healthy\"",
+        "logger=plugins.update.checker t=2026-11-09T19:08:57.551679061Z level=info msg=\"flag evaluation succeeded\" flag=\"{Value:false EvaluationDetails:{FlagKey:pluginsAutoUpdate FlagType:bool ResolutionDetail:{Variant:default Reason:STATIC ErrorCode: ErrorMessage: FlagMetadata:map[]}}}\" details=\"{Value:false EvaluationDetails:{FlagKey:pluginsAutoUpdate FlagType:bool ResolutionDetail:{Variant:default Reason:STATIC ErrorCode: ErrorMessage: FlagMetadata:map[]}}}\"",
+        "logger=grafana.update.checker t=2026-11-09T19:08:57.551759472Z level=error msg=\"Update check failed\" error=\"failed to get stable version from grafana.com: Get \\\"https://grafana.com/api/grafana/versions/stable\\\": dial tcp: lookup grafana.com on 127.0.0.11:53: server misbehaving\" duration=6.501683ms",
+        "logger=plugin.angulardetectorsprovider.dynamic t=2026-11-09T19:08:57.586339591Z level=error msg=\"Error while updating detectors\" error=\"fetch: http do: Get \\\"https://grafana.com/api/plugins/angular_patterns\\\": dial tcp: lookup grafana.com on 127.0.0.11:53: server misbehaving\"",
+        "logger=plugin.angulardetectorsprovider.dynamic t=2026-11-09T19:08:57.586365358Z level=info msg=\"Patterns update finished\" duration=880.523µs",
+        "logger=plugin.signature.key_retriever t=2026-11-09T19:08:57.619305566Z level=error msg=\"Error downloading plugin manifest keys\" error=\"Get \\\"https://grafana.com/api/plugins/ci/keys\\\": dial tcp: lookup grafana.com on 127.0.0.11:53: server misbehaving\"",
+        "logger=resource-client-auth-interceptor t=2026-11-09T19:09:00.007214665Z level=warn msg=\"calling resource store as the service without id token or marking it as the service identity\" subject=:0 uid=:0",
+        "logger=dashboard-service t=2026-11-09T19:09:27.559286659Z level=info msg=\"No last resource version found, starting from scratch\" orgID=1",
+        "logger=bleve-backend namespace=default group=provisioning.grafana.app resource=repositories size=0 reason=getStats t=2026-11-09T19:09:27.594146578Z level=info msg=\"Building index using memory\"",
+        "logger=bleve-backend namespace=default group=provisioning.grafana.app resource=repositories size=0 reason=getStats t=2026-11-09T19:09:27.596186488Z level=info msg=\"Finished building index\" elapsed=721.34µs listRV=1",
+        "logger=bleve-backend namespace=default group=provisioning.grafana.app resource=repositories size=0 reason=getStats t=2026-11-09T19:09:27.596226498Z level=info msg=\"Storing index in cache\" key=\"{Namespace:default Group:provisioning.grafana.app Resource:repositories}\" expiration=2026-11-09T19:19:27.596225077Z",
+        "logger=infra.usagestats t=2026-11-09T19:09:27.596798715Z level=info msg=\"Usage stats are ready to report\""
+    ]
+}
+ok: [std1] => (item=prometheus) => {
+    "msg": [
+        "time=2026-11-09T19:08:21.057Z level=INFO source=main.go:1770 msg=\"updated GOGC\" old=100 new=75",
+        "time=2026-11-09T19:08:21.061Z level=INFO source=main.go:824 msg=\"Updating GOMAXPROCS=1: determined from CPU quota\" component=automaxprocs",
+        "time=2026-11-09T19:08:21.061Z level=INFO source=memlimit.go:198 msg=\"GOMEMLIMIT is updated\" component=automemlimit package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=966367641 previous=9223372036854775807",
+        "time=2026-11-09T19:08:21.061Z level=INFO source=main.go:933 msg=\"Starting Prometheus Server\" mode=server version=\"(version=3.15.1, branch=HEAD, revision=bae3eced0a5369e050e83ea73bc381d7c4b1a719)\"",
+        "time=2026-11-09T19:08:21.061Z level=INFO source=main.go:938 msg=\"operational information\" build_context=\"(go=go1.27.3, platform=linux/amd64, user=builder@ansible-forge, date=20261025-06:02:31, tags=netgo,builtinassets,stringlabels)\" host_details=\"(Linux 4.18.0-553.163.1.el8_10.x86_64 #1 SMP Sun Sep 13 20:57:35 EDT 2026 x86_64 69ebd75f86f3 (none))\" fd_limits=\"(soft=1048576, hard=1048576)\" vm_limits=\"(soft=unlimited, hard=unlimited)\"",
+        "time=2026-11-09T19:08:21.316Z level=INFO source=web.go:727 msg=\"Start listening for connections\" component=web address=:9191",
+        "time=2026-11-09T19:08:21.317Z level=INFO source=main.go:1499 msg=\"Starting TSDB ...\"",
+        "time=2026-11-09T19:08:21.325Z level=INFO source=head.go:753 msg=\"Replaying on-disk memory mappable chunks if any\" component=tsdb",
+        "time=2026-11-09T19:08:21.325Z level=INFO source=head.go:838 msg=\"On-disk memory mappable chunks replay completed\" component=tsdb duration=1.064µs",
+        "time=2026-11-09T19:08:21.325Z level=INFO source=head.go:846 msg=\"Replaying WAL, this may take a while\" component=tsdb",
+        "time=2026-11-09T19:08:21.327Z level=INFO source=tls_config.go:381 msg=\"Listening on\" component=web address=[::]:9191",
+        "time=2026-11-09T19:08:21.327Z level=INFO source=tls_config.go:384 msg=\"TLS is disabled.\" component=web http2=false address=[::]:9191",
+        "time=2026-11-09T19:08:21.328Z level=INFO source=head.go:941 msg=\"WAL segment loaded\" component=tsdb segment=0 maxSegment=0 duration=2.685669ms",
+        "time=2026-11-09T19:08:21.328Z level=INFO source=head.go:978 msg=\"WAL replay completed\" component=tsdb checkpoint_replay_duration=40.448µs wal_replay_duration=2.715457ms wbl_replay_duration=163ns chunk_snapshot_load_duration=0s mmap_chunk_replay_duration=1.064µs total_replay_duration=2.778716ms",
+        "time=2026-11-09T19:08:21.330Z level=INFO source=main.go:1520 msg=\"filesystem information\" fs_type=XFS_SUPER_MAGIC",
+        "time=2026-11-09T19:08:21.330Z level=INFO source=main.go:1523 msg=\"TSDB started\"",
+        "time=2026-11-09T19:08:21.330Z level=INFO source=main.go:1721 msg=\"Loading configuration file\" filename=/etc/prometheus/prometheus.yml",
+        "time=2026-11-09T19:08:21.330Z level=INFO source=main.go:1137 msg=\"TSDB retention updated\" duration=15d size=0B percentage=0",
+        "time=2026-11-09T19:08:21.331Z level=INFO source=main.go:1763 msg=\"Completed loading of configuration file\" db_storage=30.113µs remote_storage=2.201µs web_handler=446ns query_engine=1.052µs scrape=1.135637ms scrape_sd=104.744µs notify=1.598µs notify_sd=465ns rules=5.847µs tracing=6.442µs filename=/etc/prometheus/prometheus.yml totalDuration=1.663861ms",
+        "time=2026-11-09T19:08:21.331Z level=INFO source=main.go:1484 msg=\"Server is ready to receive web requests.\"",
+        "time=2026-11-09T19:08:21.332Z level=INFO source=manager.go:235 msg=\"Starting rule manager...\" component=\"rule manager\""
+    ]
+}
+ok: [std1] => (item=nginx) => {
+    "msg": []
+}
+ok: [std1] => (item=idrac_exporter) => {
+    "msg": [
+        "2026-11-09T19:08:21.043 INFO  Build information: version=2.6.3 revision=ede1bd87a96e0d96511b542baffac0ec56cf6701",
+        "2026-11-09T19:08:21.044 INFO  Loaded configuration file: /etc/prometheus/idrac.yml",
+        "2026-11-09T19:08:21.044 INFO  Server listening on 0.0.0.0:9348 (TLS: false)",
+        "2026-11-09T19:09:47.644 ERROR Received request from 127.0.0.1:9348 without 'target' parameter"
+    ]
+}
+
+TASK [Fail the scenario] *******************************************************
+fatal: [std1]: FAILED! => {"changed": false, "msg": "The deployed Grafana stack on std1 did not pass its checks - see the logs above"}
+
+PLAY RECAP *********************************************************************
+std1                       : ok=12   changed=0    unreachable=0    failed=1    skipped=0    rescued=1    ignored=0
+
+CRITICAL Ansible return code was 2, command was: ansible-playbook --extra-vars grafana_stack_artifact_dir=/opt/ansible/molecule/scratch/grafana-deploy/artifact --inventory /opt/ansible/molecule/cache/molecule/configure_grafana_stack/grafana12-deploy/inventory --skip-tags molecule-notest,notest /opt/ansible/nucleus/roles/configure_grafana_stack/molecule/grafana12-deploy/verify.yml
+log: /opt/ansible/molecule/logs/grafana12-deploy-verify-2026-11-09-1430.log (exit 2)
+mkdir: cannot create directory ‘/opt/ansible/molecule/reports’: Permission denied
+cp: failed to access '/opt/ansible/molecule/reports/cis/grafana12-deploy-docker_cis_report-std1-20261109-1409.csv': Permission denied

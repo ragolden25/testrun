@@ -1,0 +1,53 @@
+---
+# firewalld install/enable and the Grafana stack's rules: nginx on 80 (301 to HTTPS) and 443 are the only
+# ports the stack serves. Grafana (3000), Prometheus (9191) and the iDRAC exporter (9348) are bound to
+# 127.0.0.1, so they are not opened, and 3000/9191 are closed if an earlier version of this role opened
+# them. (This file used to hold a copy of compose-setup.yml, so the firewall was never configured.)
+# The role has no handlers, so every rule is applied now (immediate) and kept across reboots (permanent).
+# ───────────────────────────────────────────────
+# Firewall
+# ───────────────────────────────────────────────
+
+- name: Ensure firewalld Python bindings are installed
+  ansible.builtin.package:
+    name: python3-firewall
+    state: present
+
+- name: Ensure firewalld is installed
+  ansible.builtin.package:
+    name: firewalld
+    state: present
+
+- name: Ensure firewalld is running
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: Allow HTTP/HTTPS
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    zone: public
+    permanent: true
+    immediate: true
+    state: enabled
+  loop:
+    - http
+    - https
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/libexec/platform-python
+
+- name: Close the Grafana and Prometheus ports opened by earlier versions (both are localhost-only now)
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    zone: public
+    permanent: true
+    immediate: true
+    state: disabled
+  loop:
+    - "3000/tcp"
+    - "9191/tcp"
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/libexec/platform-python

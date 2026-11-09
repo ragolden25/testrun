@@ -1,0 +1,14 @@
+Copy them to /home/ansible on ansible-forge, then, as ansible:
+
+cd /home/ansible
+tar -xzf grafana-deploy-test.tar.gz -C / --no-same-owner --no-overwrite-dir -m && chmod +x /opt/ansible/molecule/run-grafana12-deploy.sh
+bash install_cis.sh
+
+
+grafana-deploy-test.tar.gz has to go first, because the CIS tarball updates two of its files. Then the test:
+
+cd /opt/ansible/nucleus/playbooks && ansible-playbook -i /opt/ansible/vars/inventory.ini render_weekly_compose.yml --vault-password-file ~/vault_pass.txt
+/opt/ansible/molecule/run-grafana12-deploy.sh deploy && /opt/ansible/molecule/run-grafana12-deploy.sh verify
+
+The first command should end by rendering files/grafana/weekly/45/docker-compose.yml. If it says “Grafana compose not rendered”, 
+that week is missing one of the four Grafana images; send the line.

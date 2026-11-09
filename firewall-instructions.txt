@@ -1,0 +1,14 @@
+The firewall.yml fixes it. It matches the Guacamole role and allows only http and https. It also closes 3000 and 9191, which the old version opened, 
+because Grafana and Prometheus are localhost-only now. Install it on ansible-forge as ansible, from the folder holding it:
+
+cp -p /opt/ansible/nucleus/roles/configure_grafana_stack/tasks/firewall.yml{,.bak-compose-copy} && cp firewall.yml /opt/ansible/nucleus/roles/configure_grafana_stack/tasks/firewall.yml
+
+
+Second issue: the CIS reports folder doesn’t exist, and ansible can’t create it under /opt/ansible/molecule. This is what blocked keeping the report:
+
+sudo mkdir -p /opt/ansible/molecule/reports/cis && sudo chown -R ansible:ansible /opt/ansible/molecule/reports
+
+Then rerun the test. You don’t need to render the compose file again:
+
+/opt/ansible/molecule/run-grafana12-deploy.sh deploy && /opt/ansible/molecule/run-grafana12-deploy.sh verify
+

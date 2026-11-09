@@ -1,0 +1,5180 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Trixie packages -> container-forge base images -> ansible-forge staging, sync, builds and scans. Fed by emit_event.sh and the scan/build metric scripts via node_exporter's textfile collector.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Time of the last dashboard refresh (refreshes every minute).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#8b8b85",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "noValue": "-",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "time:DD MMM YYYY HH:mm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "time() * 1000",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Current date / time",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 10,
+        "x": 5,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "**1. Trixie** builds nginx / openssl packages (weekly) &nbsp;\u2192&nbsp; **2. container-forge** builds the base images (daily 0500) &nbsp;\u2192&nbsp; **3. ansible-forge** stages binaries (weekly), syncs base images (0600), builds the stacks and scans every image.",
+        "mode": "markdown"
+      },
+      "pluginVersion": "12.4.11",
+      "title": "Pipeline flow",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "What the tile colours mean on this dashboard.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "#d03b3b",
+                  "index": 1,
+                  "text": "failed"
+                },
+                "1": {
+                  "color": "#0ca30c",
+                  "index": 0,
+                  "text": "ok"
+                },
+                "-1": {
+                  "color": "#fab219",
+                  "index": 2,
+                  "text": "not reported"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d03b3b",
+                "value": 0
+              },
+              {
+                "color": "#0ca30c",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 15,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 18
+        },
+        "textMode": "name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "vector(1)",
+          "instant": true,
+          "legendFormat": "ok",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "vector(0)",
+          "instant": true,
+          "legendFormat": "failed",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "vector(-1)",
+          "instant": true,
+          "legendFormat": "not reporting yet",
+          "range": false,
+          "refId": "C"
+        }
+      ],
+      "title": "Status colors",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Exporter reachable? A red host means the metrics beside it may be stale. Filter is HOST_REGEX at the top of build_dashboard.py.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "#d03b3b",
+                  "index": 1,
+                  "text": "DOWN"
+                },
+                "1": {
+                  "color": "#0ca30c",
+                  "index": 0,
+                  "text": "UP"
+                },
+                "-1": {
+                  "color": "#fab219",
+                  "index": 2,
+                  "text": "\u2026 NOT REPORTING YET"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "noValue": "no data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d03b3b",
+                "value": 0
+              },
+              {
+                "color": "#0ca30c",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "up{job=~\"(?i).*(trixie|ansible.?forge|container.?forge).*\"}",
+          "instant": true,
+          "legendFormat": "{{job}}",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Pipeline hosts",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Result of the last weekly nginx / openssl package job.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "#d03b3b",
+                  "index": 1,
+                  "text": "FAILED"
+                },
+                "1": {
+                  "color": "#0ca30c",
+                  "index": 0,
+                  "text": "OK"
+                },
+                "-1": {
+                  "color": "#fab219",
+                  "index": 2,
+                  "text": "\u2026 NOT REPORTING YET"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "noValue": "no data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d03b3b",
+                "value": 0
+              },
+              {
+                "color": "#0ca30c",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 0,
+        "y": 3
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_last_status{type=\"repo\"} or on(target) label_replace(vector(-1), \"target\", \"nginx\", \"\", \"\") or on(target) label_replace(vector(-1), \"target\", \"openssl\", \"\", \"\")",
+          "instant": true,
+          "legendFormat": "{{target}}",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "TRIXIE \u00b7 package builds (weekly)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "'upstream' = newest version seen on the last weekly run; 'built' = the last package actually built. 'Date' is when that version was recorded by the build script.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Date"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:DD MMM YYYY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kind"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "repo": {
+                        "index": 0,
+                        "text": "upstream"
+                      },
+                      "repo-new": {
+                        "index": 1,
+                        "text": "built"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 5,
+        "y": 3
+      },
+      "id": 6,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_last_run_timestamp_seconds{type=~\"repo|repo-new\"} * 1000 * on(type, target) group_left(version) (pipeline_info{type=~\"repo|repo-new\"} * 0 + 1)",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "TRIXIE \u00b7 package versions",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "host": true,
+              "instance": true,
+              "job": true
+            },
+            "renameByName": {
+              "Value": "Date",
+              "target": "Package",
+              "type": "Kind",
+              "version": "Version"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Independent daily check (check_upstream_versions.sh): the version the Nucleus repo publishes, compared with the newest release on the project's own page (nginx.org, GitHub openssl 3.5.x). 'Checked' shows when the check last ran, which is independent of the weekly build.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no check yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "#d03b3b",
+                        "index": 1,
+                        "text": "behind"
+                      },
+                      "1": {
+                        "color": "#0ca30c",
+                        "index": 0,
+                        "text": "current"
+                      },
+                      "-1": {
+                        "color": "#fab219",
+                        "index": 2,
+                        "text": "unknown"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Checked"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeFromNow"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 7,
+        "x": 13,
+        "y": 3
+      },
+      "id": 7,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "repo_version_current",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "upstream_check_timestamp_seconds * 1000",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "TRIXIE \u00b7 repo vs upstream (daily check)",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "host": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {
+              "Value #A": 3,
+              "Value #B": 4,
+              "package": 0,
+              "published": 1,
+              "upstream": 2
+            },
+            "renameByName": {
+              "Value #A": "Status",
+              "Value #B": "Checked",
+              "package": "Package",
+              "published": "Repo",
+              "upstream": "Upstream"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Result of the last build of each base image.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "#d03b3b",
+                  "index": 1,
+                  "text": "FAILED"
+                },
+                "1": {
+                  "color": "#0ca30c",
+                  "index": 0,
+                  "text": "OK"
+                },
+                "-1": {
+                  "color": "#fab219",
+                  "index": 2,
+                  "text": "\u2026 NOT REPORTING YET"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "noValue": "no data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d03b3b",
+                "value": 0
+              },
+              {
+                "color": "#0ca30c",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 10,
+        "x": 0,
+        "y": 8
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_last_status{type=\"build\",target!~\"debian13-node20\"} or on(target) label_replace(vector(-1), \"target\", \"debian13-base\", \"\", \"\") or on(target) label_replace(vector(-1), \"target\", \"debian13-go\", \"\", \"\") or on(target) label_replace(vector(-1), \"target\", \"debian13-node22\", \"\", \"\") or on(target) label_replace(vector(-1), \"target\", \"debian13-node24\", \"\", \"\") or on(target) label_replace(vector(-1), \"target\", \"debian13-postgres18\", \"\", \"\")",
+          "instant": true,
+          "legendFormat": "{{target}}",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "CONTAINER-FORGE \u00b7 base image builds (daily 0500)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "The digest the 0500 build produced. ansible-forge's sync should report the same one.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 10,
+        "x": 10,
+        "y": 8
+      },
+      "id": 9,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_info{type=\"build\",target!~\"debian13-node20\"}",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "CONTAINER-FORGE \u00b7 digest of each base image built",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true,
+              "__name__": true,
+              "host": true,
+              "instance": true,
+              "job": true,
+              "type": true
+            },
+            "renameByName": {
+              "target": "Image",
+              "version": "Digest"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "check_upstream_releases.sh asks each project (GitHub / PostgreSQL tags) for its newest stable release and compares it with what we have staged or build. 'review' means a new MAJOR or MINOR release exists, which usually needs a Dockerfile / dependency look rather than just a rebuild. 'Pre-release' is shown only for Guacamole and guacd, to give early notice of a 1.7 / 2.0 candidate. nginx and openssl are in the Trixie panel.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no check yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "#fab219",
+                        "index": 1,
+                        "text": "newer patch"
+                      },
+                      "1": {
+                        "color": "#0ca30c",
+                        "index": 0,
+                        "text": "current"
+                      },
+                      "2": {
+                        "color": "#ec835a",
+                        "index": 2,
+                        "text": "review: new major/minor"
+                      },
+                      "-1": {
+                        "color": "#8b8b85",
+                        "index": 3,
+                        "text": "unknown"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Pre-release"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "-": {
+                        "index": 0,
+                        "text": ""
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#ec835a",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Checked"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeFromNow"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 27,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "upstream_release",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "upstream_release_check_timestamp_seconds * 1000",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "UPSTREAM \u00b7 project releases vs what we build (daily check)",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "host": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {
+              "Value #A": 4,
+              "Value #B": 5,
+              "component": 0,
+              "ours": 1,
+              "prerelease": 3,
+              "stable": 2
+            },
+            "renameByName": {
+              "Value #A": "Status",
+              "Value #B": "Checked",
+              "component": "Component",
+              "ours": "We build",
+              "prerelease": "Pre-release",
+              "stable": "Newest stable"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Result of the last staging run for each binary.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "#d03b3b",
+                  "index": 1,
+                  "text": "FAILED"
+                },
+                "1": {
+                  "color": "#0ca30c",
+                  "index": 0,
+                  "text": "OK"
+                },
+                "-1": {
+                  "color": "#fab219",
+                  "index": 2,
+                  "text": "\u2026 NOT REPORTING YET"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "noValue": "no data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d03b3b",
+                "value": 0
+              },
+              {
+                "color": "#0ca30c",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 0,
+        "y": 21
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_last_status{type=\"stage\"} or on(target) label_replace(vector(-1), \"target\", \"grafana\", \"\", \"\") or on(target) label_replace(vector(-1), \"target\", \"idrac\", \"\", \"\") or on(target) label_replace(vector(-1), \"target\", \"postgres\", \"\", \"\") or on(target) label_replace(vector(-1), \"target\", \"prometheus\", \"\", \"\")",
+          "instant": true,
+          "legendFormat": "{{target}}",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "ANSIBLE-FORGE \u00b7 staged binaries (weekly)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Result of the last sync/load of each base image. A 'setup' tile (GPG key / quarter step) appears only if that step fails.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "#d03b3b",
+                  "index": 1,
+                  "text": "FAILED"
+                },
+                "1": {
+                  "color": "#0ca30c",
+                  "index": 0,
+                  "text": "OK"
+                },
+                "-1": {
+                  "color": "#fab219",
+                  "index": 2,
+                  "text": "\u2026 NOT REPORTING YET"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "noValue": "no data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d03b3b",
+                "value": 0
+              },
+              {
+                "color": "#0ca30c",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 8,
+        "y": 21
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_last_status{type=\"sync\",target!=\"setup\",target!~\"debian13-node20\"} or (pipeline_last_status{type=\"sync\",target=\"setup\"} == 0) or on(target) label_replace(vector(-1), \"target\", \"debian13-base\", \"\", \"\") or on(target) label_replace(vector(-1), \"target\", \"debian13-go\", \"\", \"\") or on(target) label_replace(vector(-1), \"target\", \"debian13-node22\", \"\", \"\") or on(target) label_replace(vector(-1), \"target\", \"debian13-node24\", \"\", \"\") or on(target) label_replace(vector(-1), \"target\", \"debian13-postgres18\", \"\", \"\")",
+          "instant": true,
+          "legendFormat": "{{target}}",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "ANSIBLE-FORGE \u00b7 base image syncs (daily 0600)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Result of the last Guacamole / Grafana build.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "#d03b3b",
+                  "index": 1,
+                  "text": "FAILED"
+                },
+                "1": {
+                  "color": "#0ca30c",
+                  "index": 0,
+                  "text": "OK"
+                },
+                "-1": {
+                  "color": "#fab219",
+                  "index": 2,
+                  "text": "\u2026 NOT REPORTING YET"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "noValue": "no data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d03b3b",
+                "value": 0
+              },
+              {
+                "color": "#0ca30c",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 16,
+        "y": 21
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_last_status{type=\"stack\"} or on(target) label_replace(vector(-1), \"target\", \"guacamole\", \"\", \"\") or on(target) label_replace(vector(-1), \"target\", \"grafana\", \"\", \"\")",
+          "instant": true,
+          "legendFormat": "{{target}}",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "ANSIBLE-FORGE \u00b7 stack builds",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Result of the last weekly Molecule run (play_weekly_molecule.sh, Thursday 0400, after the weekly builds) for the Grafana stack. Deployment role = the configure_grafana_stack role on a Debian container; nucleus images / ccop images = the actual weekly images started on the role-staged config. Green OK = tests ran and passed. Red FAILED = the latest weekly image or the role config broke (see /opt/ansible/molecule/logs/). Amber NOT REPORTED = not tested this week (no fresh image) or the scenario has not run yet. Deployed on std1: the production configure_grafana_stack role deployed this week's nucleus images on std1 (signature check, firewall, compose, wipe-and-redeploy) and the running stack passed its checks (grafana12-deploy).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "#d03b3b",
+                  "index": 1,
+                  "text": "FAILED"
+                },
+                "1": {
+                  "color": "#0ca30c",
+                  "index": 0,
+                  "text": "OK"
+                },
+                "2": {
+                  "color": "#fab219",
+                  "index": 2,
+                  "text": "NOT REPORTED"
+                },
+                "-1": {
+                  "color": "#fab219",
+                  "index": 3,
+                  "text": "NOT REPORTED"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "noValue": "no data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d03b3b",
+                "value": 0
+              },
+              {
+                "color": "#0ca30c",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "role-config"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Deployment role"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "image-nucleus"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "nucleus images"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "image-ccop"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "ccop images"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "deployment"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Deployed on std1"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 26
+      },
+      "id": 31,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 18,
+          "valueSize": 24
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "editorMode": "code",
+          "expr": "pipeline_weekly_molecule_status{stack=\"grafana\"} or on(test) label_replace(vector(-1), \"test\", \"role-config\", \"\", \"\") or on(test) label_replace(vector(-1), \"test\", \"image-nucleus\", \"\", \"\") or on(test) label_replace(vector(-1), \"test\", \"image-ccop\", \"\", \"\") or on(test) label_replace(vector(-1), \"test\", \"deployment\", \"\", \"\")",
+          "instant": true,
+          "legendFormat": "{{test}}",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "GRAFANA STACK \u00b7 Molecule tests (weekly)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Result of the last weekly Molecule run (play_weekly_molecule.sh, Thursday 0400, after the weekly builds) for the Guacamole stack. Deployment role = the Guacamole role on a Debian container; nucleus images / ccop images = the actual weekly images started on the role-staged config. Green OK = tests ran and passed. Red FAILED = the latest weekly image or the role config broke (see /opt/ansible/molecule/logs/). Amber NOT REPORTED = not tested this week (no fresh image) or the scenario has not run yet.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "#d03b3b",
+                  "index": 1,
+                  "text": "FAILED"
+                },
+                "1": {
+                  "color": "#0ca30c",
+                  "index": 0,
+                  "text": "OK"
+                },
+                "2": {
+                  "color": "#fab219",
+                  "index": 2,
+                  "text": "NOT REPORTED"
+                },
+                "-1": {
+                  "color": "#fab219",
+                  "index": 3,
+                  "text": "NOT REPORTED"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "noValue": "no data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d03b3b",
+                "value": 0
+              },
+              {
+                "color": "#0ca30c",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "role-config"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Deployment role"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "image-nucleus"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "nucleus images"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "image-ccop"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "ccop images"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 26
+      },
+      "id": 32,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 18,
+          "valueSize": 24
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "editorMode": "code",
+          "expr": "pipeline_weekly_molecule_status{stack=\"guacamole\"} or on(test) label_replace(vector(-1), \"test\", \"role-config\", \"\", \"\") or on(test) label_replace(vector(-1), \"test\", \"image-nucleus\", \"\", \"\") or on(test) label_replace(vector(-1), \"test\", \"image-ccop\", \"\", \"\")",
+          "instant": true,
+          "legendFormat": "{{test}}",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "GUACAMOLE STACK \u00b7 Molecule tests (weekly)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "One row per weekly Molecule test that failed or was not tested in its last run, written by play_weekly_molecule.sh to pipeline_weekly_molecule.prom. 'What failed' is the first failed Ansible task in that test's log (ignored errors are skipped) and 'Reason' is its error message; open the log on ansible-forge for the full output. Not-tested rows give the reason the test was skipped. Empty when every test passed.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": true
+          },
+          "mappings": [],
+          "noValue": "All weekly Molecule tests passed",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Stack"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "grafana": {
+                        "text": "Grafana stack",
+                        "index": 0
+                      },
+                      "guacamole": {
+                        "text": "Guacamole stack",
+                        "index": 1
+                      },
+                      "guac": {
+                        "text": "Guacamole stack",
+                        "index": 2
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Test"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "role-config": {
+                        "text": "Deployment role",
+                        "index": 0
+                      },
+                      "image-ccop": {
+                        "text": "ccop images",
+                        "index": 1
+                      },
+                      "image-nucleus": {
+                        "text": "nucleus images",
+                        "index": 2
+                      },
+                      "deployment": {
+                        "text": "Deployed on std1",
+                        "index": 3
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "What failed"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "not tested": {
+                        "text": "not tested",
+                        "color": "#8b8b85",
+                        "index": 0
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d03b3b"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 14,
+        "x": 0,
+        "y": 32
+      },
+      "id": 33,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_weekly_molecule_failure_info",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "MOLECULE \u00b7 what failed or was not tested (weekly)",
+      "type": "table",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "host": true,
+              "instance": true,
+              "job": true,
+              "Value": true
+            },
+            "indexByName": {
+              "stack": 0,
+              "test": 1,
+              "task": 2,
+              "reason": 3,
+              "log": 4
+            },
+            "renameByName": {
+              "stack": "Stack",
+              "test": "Test",
+              "task": "What failed",
+              "reason": "Reason",
+              "log": "Log on ansible-forge"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Components of the current quarterly release that failed to build, scan or sign and so ship their last good release instead: the previous quarter's signed images and scan results (status fallback), or that have no release at all (status failed - the stack build fails and no docker-compose.yml is rendered). Written by the quarterly build (stack_finish.yml) to pipeline_quarterly_<stack>.prom; the same list is in files/<stack>/<quarter>/fallback.env. Empty when every component was built this quarter. Grafana stack only until the Guacamole build is split per component.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": true
+          },
+          "mappings": [],
+          "noValue": "Every component built this quarter",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Stack"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "grafana": {
+                        "text": "Grafana stack",
+                        "index": 0
+                      },
+                      "guacamole": {
+                        "text": "Guacamole stack",
+                        "index": 1
+                      },
+                      "guac": {
+                        "text": "Guacamole stack",
+                        "index": 2
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "fallback": {
+                        "text": "last good release",
+                        "color": "#e0a30c",
+                        "index": 0
+                      },
+                      "failed": {
+                        "text": "NO release",
+                        "color": "#d03b3b",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Quarter"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 10,
+        "x": 14,
+        "y": 32
+      },
+      "id": 34,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_quarterly_component_info{status!=\"built\"} and on(quarter) quarter_current",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "CURRENT QUARTER \u00b7 components on a last-good release",
+      "type": "table",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "host": true,
+              "instance": true,
+              "job": true,
+              "Value": true
+            },
+            "indexByName": {
+              "stack": 0,
+              "component": 1,
+              "version": 2,
+              "status": 3,
+              "from": 4,
+              "failed_step": 5,
+              "quarter": 6
+            },
+            "renameByName": {
+              "stack": "Stack",
+              "component": "Component",
+              "version": "Version shipped",
+              "status": "Status",
+              "from": "Built in",
+              "failed_step": "Failed at",
+              "quarter": "Quarter"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Result of this quarter's Grafana and Guacamole stack builds, read from each stack's signed build log (files/<stack>/<quarter>/provenance/build.log) by emit_quarter_info.sh. The quarter is the one the fiscal calendar (calendar.env) says it is now. 'Ignored' = tasks whose errors the playbook deliberately ignores (for example signing): a build can be OK with some ignored errors.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no quarter build info yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Result"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "#d03b3b",
+                        "index": 1,
+                        "text": "FAILED"
+                      },
+                      "1": {
+                        "color": "#0ca30c",
+                        "index": 0,
+                        "text": "built OK"
+                      },
+                      "3": {
+                        "color": "#8b8b85",
+                        "index": 2,
+                        "text": "not built yet"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Stack"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "grafana": {
+                        "index": 0,
+                        "text": "Grafana stack"
+                      },
+                      "guac": {
+                        "index": 1,
+                        "text": "Guacamole stack"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Log written"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:DD MMM YYYY"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0,
+                        "text": ""
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 38
+      },
+      "id": 28,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "quarter_stack_build and on(quarter) quarter_current",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "quarter_stack_build_timestamp_seconds * 1000 and on(quarter) quarter_current",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "CURRENT QUARTER \u00b7 stack builds",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "host": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {
+              "Value #A": 2,
+              "Value #B": 7,
+              "duration": 5,
+              "finished": 4,
+              "ignored": 6,
+              "quarter": 1,
+              "stack": 0,
+              "started": 3
+            },
+            "renameByName": {
+              "Value #A": "Result",
+              "Value #B": "Log written",
+              "duration": "Took",
+              "finished": "Finished",
+              "ignored": "Ignored errors",
+              "quarter": "Quarter",
+              "stack": "Stack",
+              "started": "Started"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Locked = the version in this quarter's versions.env. Built = the version of the image actually built this quarter (ccop and nucleus separately). Green: built = locked | amber: built differs from the lock | grey: not built yet, or bundled inside another image (Tomcat, JDK).",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no versions.env found for this quarter yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "1": {
+                        "color": "#0ca30c",
+                        "index": 0,
+                        "text": "built = locked"
+                      },
+                      "2": {
+                        "color": "#fab219",
+                        "index": 1,
+                        "text": "built differs from lock"
+                      },
+                      "3": {
+                        "color": "#8b8b85",
+                        "index": 2,
+                        "text": "not built yet"
+                      },
+                      "4": {
+                        "color": "#8b8b85",
+                        "index": 3,
+                        "text": "bundled in image"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 43
+      },
+      "id": 29,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "(label_replace(label_replace((quarter_locked_version{stack=\"grafana\",component!~\"tomcat|jdk\"} and on(quarter) quarter_current) * on(stack, quarter, component, version) group_left() ((release_build_info{stack=\"grafana\",class=\"ccop\",version!=\"-\"} and on(quarter) quarter_current) * 0 + 1), \"built\", \"$1\", \"version\", \"(.*)\"), \"class\", \"ccop\", \"\", \"\")) or (label_replace(((quarter_locked_version{stack=\"grafana\",component!~\"tomcat|jdk\"} and on(quarter) quarter_current) unless on(stack, quarter, component, version) (release_build_info{stack=\"grafana\",class=\"ccop\",version!=\"-\"} and on(quarter) quarter_current)) * on(stack, quarter, component) group_left(built) (label_replace((release_build_info{stack=\"grafana\",class=\"ccop\",version!=\"-\"} and on(quarter) quarter_current), \"built\", \"$1\", \"version\", \"(.*)\") * 0 + 2), \"class\", \"ccop\", \"\", \"\")) or (label_replace(((quarter_locked_version{stack=\"grafana\",component!~\"tomcat|jdk\"} and on(quarter) quarter_current) unless on(stack, quarter, component) (release_build_info{stack=\"grafana\",class=\"ccop\",version!=\"-\"} and on(quarter) quarter_current)) * 3, \"class\", \"ccop\", \"\", \"\")) or (label_replace(label_replace((quarter_locked_version{stack=\"grafana\",component!~\"tomcat|jdk\"} and on(quarter) quarter_current) * on(stack, quarter, component, version) group_left() ((release_build_info{stack=\"grafana\",class=\"nucleus\",version!=\"-\"} and on(quarter) quarter_current) * 0 + 1), \"built\", \"$1\", \"version\", \"(.*)\"), \"class\", \"nucleus\", \"\", \"\")) or (label_replace(((quarter_locked_version{stack=\"grafana\",component!~\"tomcat|jdk\"} and on(quarter) quarter_current) unless on(stack, quarter, component, version) (release_build_info{stack=\"grafana\",class=\"nucleus\",version!=\"-\"} and on(quarter) quarter_current)) * on(stack, quarter, component) group_left(built) (label_replace((release_build_info{stack=\"grafana\",class=\"nucleus\",version!=\"-\"} and on(quarter) quarter_current), \"built\", \"$1\", \"version\", \"(.*)\") * 0 + 2), \"class\", \"nucleus\", \"\", \"\")) or (label_replace(((quarter_locked_version{stack=\"grafana\",component!~\"tomcat|jdk\"} and on(quarter) quarter_current) unless on(stack, quarter, component) (release_build_info{stack=\"grafana\",class=\"nucleus\",version!=\"-\"} and on(quarter) quarter_current)) * 3, \"class\", \"nucleus\", \"\", \"\")) or (label_replace((quarter_locked_version{stack=\"grafana\",component=~\"tomcat|jdk\"} and on(quarter) quarter_current) * 4, \"class\", \"bundled\", \"\", \"\"))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "CURRENT QUARTER \u00b7 GRAFANA STACK \u00b7 locked versions vs built",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "host": true,
+              "image": true,
+              "instance": true,
+              "job": true,
+              "quarter": true,
+              "stack": true
+            },
+            "indexByName": {
+              "Value": 4,
+              "built": 3,
+              "class": 1,
+              "component": 0,
+              "version": 2
+            },
+            "renameByName": {
+              "Value": "Status",
+              "built": "Built",
+              "class": "Image",
+              "component": "Component",
+              "version": "Locked (versions.env)"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Component"
+              },
+              {
+                "field": "Image"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Locked = the version in this quarter's versions.env. Built = the version of the image actually built this quarter (ccop and nucleus separately). Green: built = locked | amber: built differs from the lock | grey: not built yet, or bundled inside another image (Tomcat, JDK).",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no versions.env found for this quarter yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "1": {
+                        "color": "#0ca30c",
+                        "index": 0,
+                        "text": "built = locked"
+                      },
+                      "2": {
+                        "color": "#fab219",
+                        "index": 1,
+                        "text": "built differs from lock"
+                      },
+                      "3": {
+                        "color": "#8b8b85",
+                        "index": 2,
+                        "text": "not built yet"
+                      },
+                      "4": {
+                        "color": "#8b8b85",
+                        "index": 3,
+                        "text": "bundled in image"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 43
+      },
+      "id": 30,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "(label_replace(label_replace((quarter_locked_version{stack=\"guac\",component!~\"tomcat|jdk\"} and on(quarter) quarter_current) * on(stack, quarter, component, version) group_left() ((release_build_info{stack=\"guac\",class=\"ccop\",version!=\"-\"} and on(quarter) quarter_current) * 0 + 1), \"built\", \"$1\", \"version\", \"(.*)\"), \"class\", \"ccop\", \"\", \"\")) or (label_replace(((quarter_locked_version{stack=\"guac\",component!~\"tomcat|jdk\"} and on(quarter) quarter_current) unless on(stack, quarter, component, version) (release_build_info{stack=\"guac\",class=\"ccop\",version!=\"-\"} and on(quarter) quarter_current)) * on(stack, quarter, component) group_left(built) (label_replace((release_build_info{stack=\"guac\",class=\"ccop\",version!=\"-\"} and on(quarter) quarter_current), \"built\", \"$1\", \"version\", \"(.*)\") * 0 + 2), \"class\", \"ccop\", \"\", \"\")) or (label_replace(((quarter_locked_version{stack=\"guac\",component!~\"tomcat|jdk\"} and on(quarter) quarter_current) unless on(stack, quarter, component) (release_build_info{stack=\"guac\",class=\"ccop\",version!=\"-\"} and on(quarter) quarter_current)) * 3, \"class\", \"ccop\", \"\", \"\")) or (label_replace(label_replace((quarter_locked_version{stack=\"guac\",component!~\"tomcat|jdk\"} and on(quarter) quarter_current) * on(stack, quarter, component, version) group_left() ((release_build_info{stack=\"guac\",class=\"nucleus\",version!=\"-\"} and on(quarter) quarter_current) * 0 + 1), \"built\", \"$1\", \"version\", \"(.*)\"), \"class\", \"nucleus\", \"\", \"\")) or (label_replace(((quarter_locked_version{stack=\"guac\",component!~\"tomcat|jdk\"} and on(quarter) quarter_current) unless on(stack, quarter, component, version) (release_build_info{stack=\"guac\",class=\"nucleus\",version!=\"-\"} and on(quarter) quarter_current)) * on(stack, quarter, component) group_left(built) (label_replace((release_build_info{stack=\"guac\",class=\"nucleus\",version!=\"-\"} and on(quarter) quarter_current), \"built\", \"$1\", \"version\", \"(.*)\") * 0 + 2), \"class\", \"nucleus\", \"\", \"\")) or (label_replace(((quarter_locked_version{stack=\"guac\",component!~\"tomcat|jdk\"} and on(quarter) quarter_current) unless on(stack, quarter, component) (release_build_info{stack=\"guac\",class=\"nucleus\",version!=\"-\"} and on(quarter) quarter_current)) * 3, \"class\", \"nucleus\", \"\", \"\")) or (label_replace((quarter_locked_version{stack=\"guac\",component=~\"tomcat|jdk\"} and on(quarter) quarter_current) * 4, \"class\", \"bundled\", \"\", \"\"))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "CURRENT QUARTER \u00b7 GUACAMOLE STACK \u00b7 locked versions vs built",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "host": true,
+              "image": true,
+              "instance": true,
+              "job": true,
+              "quarter": true,
+              "stack": true
+            },
+            "indexByName": {
+              "Value": 4,
+              "built": 3,
+              "class": 1,
+              "component": 0,
+              "version": 2
+            },
+            "renameByName": {
+              "Value": "Status",
+              "built": "Built",
+              "class": "Image",
+              "component": "Component",
+              "version": "Locked (versions.env)"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Component"
+              },
+              {
+                "field": "Image"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "What each quarter released (read from the quarter build directories by emit_release_ledger.sh). Status: green 'built + scan OK' | red 'scan FAILED' | amber 'built, no scan yet' | grey 'not built yet'. The scan result is the latest scan of that exact version.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no quarter builds recorded yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "#d03b3b",
+                        "index": 1,
+                        "text": "scan FAILED"
+                      },
+                      "1": {
+                        "color": "#0ca30c",
+                        "index": 0,
+                        "text": "built + scan OK"
+                      },
+                      "2": {
+                        "color": "#fab219",
+                        "index": 2,
+                        "text": "built, no scan yet"
+                      },
+                      "3": {
+                        "color": "#8b8b85",
+                        "index": 3,
+                        "text": "not built yet"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Build date"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:DD MMM YYYY"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0,
+                        "text": ""
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 52
+      },
+      "id": 13,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "((release_build_info{stack=\"grafana\",class=\"ccop\",quarter=~\"$quarter\",version!=\"-\"} * 0 + 1) * on(image, version) group_left() label_replace(pipeline_last_status{type=\"scan\"} * on(target) group_left(version) (pipeline_info{type=\"scan\"} * 0 + 1), \"image\", \"$1\", \"target\", \"(.*)\")) or ((release_build_info{stack=\"grafana\",class=\"ccop\",quarter=~\"$quarter\",version!=\"-\"} * 0 + 2) unless on(image, version) label_replace(pipeline_last_status{type=\"scan\"} * on(target) group_left(version) (pipeline_info{type=\"scan\"} * 0 + 1), \"image\", \"$1\", \"target\", \"(.*)\")) or (release_build_info{stack=\"grafana\",class=\"ccop\",quarter=~\"$quarter\",version=\"-\"} * 0 + 3)",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "release_build_info{stack=\"grafana\",class=\"ccop\",quarter=~\"$quarter\"} * 1000",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "GRAFANA STACK \u00b7 QUARTER builds \u00b7 ccop (functional / dev)",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "class": true,
+              "host": true,
+              "image": true,
+              "instance": true,
+              "job": true,
+              "stack": true
+            },
+            "indexByName": {
+              "Value #A": 4,
+              "Value #B": 3,
+              "component": 1,
+              "quarter": 0,
+              "version": 2
+            },
+            "renameByName": {
+              "Value #A": "Status",
+              "Value #B": "Build date",
+              "component": "Component",
+              "quarter": "Quarter",
+              "version": "Version"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Quarter"
+              },
+              {
+                "field": "Component"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Weekly canary builds (weekly_build_<component> roles). Week = ISO week number of the year. Version = the upstream version built that week, so version changes show up from week to week. Status: green 'built + scan OK' | red 'FAILED' | amber 'waiting on staging' | orange 'not completed' (an earlier step failed). The newest four weeks are kept.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no weekly builds recorded yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "#d03b3b",
+                        "index": 1,
+                        "text": "FAILED"
+                      },
+                      "1": {
+                        "color": "#0ca30c",
+                        "index": 0,
+                        "text": "built + scan OK"
+                      },
+                      "2": {
+                        "color": "#fab219",
+                        "index": 2,
+                        "text": "waiting on staging"
+                      },
+                      "3": {
+                        "color": "#ec835a",
+                        "index": 3,
+                        "text": "not completed"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Build date"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:DD MMM YYYY"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 52
+      },
+      "id": 14,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_weekly_build{stack=\"grafana\",class=\"ccop\"}",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_weekly_build_timestamp_seconds{stack=\"grafana\",class=\"ccop\"} * 1000",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "GRAFANA STACK \u00b7 WEEKLY builds \u00b7 ccop (functional / dev)",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "class": true,
+              "host": true,
+              "instance": true,
+              "job": true,
+              "quarter": true,
+              "stack": true
+            },
+            "indexByName": {
+              "Value #A": 4,
+              "Value #B": 3,
+              "component": 1,
+              "version": 2,
+              "week": 0
+            },
+            "renameByName": {
+              "Value #A": "Status",
+              "Value #B": "Build date",
+              "component": "Component",
+              "version": "Version",
+              "week": "Week"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Week"
+              },
+              {
+                "field": "Component"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "What each quarter released (read from the quarter build directories by emit_release_ledger.sh). Status: green 'built + scan OK' | red 'scan FAILED' | amber 'built, no scan yet' | grey 'not built yet'. The scan result is the latest scan of that exact version.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no quarter builds recorded yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "#d03b3b",
+                        "index": 1,
+                        "text": "scan FAILED"
+                      },
+                      "1": {
+                        "color": "#0ca30c",
+                        "index": 0,
+                        "text": "built + scan OK"
+                      },
+                      "2": {
+                        "color": "#fab219",
+                        "index": 2,
+                        "text": "built, no scan yet"
+                      },
+                      "3": {
+                        "color": "#8b8b85",
+                        "index": 3,
+                        "text": "not built yet"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Build date"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:DD MMM YYYY"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0,
+                        "text": ""
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 60
+      },
+      "id": 15,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "((release_build_info{stack=\"grafana\",class=\"nucleus\",quarter=~\"$quarter\",version!=\"-\"} * 0 + 1) * on(image, version) group_left() label_replace(pipeline_last_status{type=\"scan\"} * on(target) group_left(version) (pipeline_info{type=\"scan\"} * 0 + 1), \"image\", \"$1\", \"target\", \"(.*)\")) or ((release_build_info{stack=\"grafana\",class=\"nucleus\",quarter=~\"$quarter\",version!=\"-\"} * 0 + 2) unless on(image, version) label_replace(pipeline_last_status{type=\"scan\"} * on(target) group_left(version) (pipeline_info{type=\"scan\"} * 0 + 1), \"image\", \"$1\", \"target\", \"(.*)\")) or (release_build_info{stack=\"grafana\",class=\"nucleus\",quarter=~\"$quarter\",version=\"-\"} * 0 + 3)",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "release_build_info{stack=\"grafana\",class=\"nucleus\",quarter=~\"$quarter\"} * 1000",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "GRAFANA STACK \u00b7 QUARTER builds \u00b7 nucleus (hardened)",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "class": true,
+              "host": true,
+              "image": true,
+              "instance": true,
+              "job": true,
+              "stack": true
+            },
+            "indexByName": {
+              "Value #A": 4,
+              "Value #B": 3,
+              "component": 1,
+              "quarter": 0,
+              "version": 2
+            },
+            "renameByName": {
+              "Value #A": "Status",
+              "Value #B": "Build date",
+              "component": "Component",
+              "quarter": "Quarter",
+              "version": "Version"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Quarter"
+              },
+              {
+                "field": "Component"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Weekly canary builds (weekly_build_<component> roles). Week = ISO week number of the year. Version = the upstream version built that week, so version changes show up from week to week. Status: green 'built + scan OK' | red 'FAILED' | amber 'waiting on staging' | orange 'not completed' (an earlier step failed). The newest four weeks are kept.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no weekly builds recorded yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "#d03b3b",
+                        "index": 1,
+                        "text": "FAILED"
+                      },
+                      "1": {
+                        "color": "#0ca30c",
+                        "index": 0,
+                        "text": "built + scan OK"
+                      },
+                      "2": {
+                        "color": "#fab219",
+                        "index": 2,
+                        "text": "waiting on staging"
+                      },
+                      "3": {
+                        "color": "#ec835a",
+                        "index": 3,
+                        "text": "not completed"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Build date"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:DD MMM YYYY"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 60
+      },
+      "id": 16,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_weekly_build{stack=\"grafana\",class=\"nucleus\"}",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_weekly_build_timestamp_seconds{stack=\"grafana\",class=\"nucleus\"} * 1000",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "GRAFANA STACK \u00b7 WEEKLY builds \u00b7 nucleus (hardened)",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "class": true,
+              "host": true,
+              "instance": true,
+              "job": true,
+              "quarter": true,
+              "stack": true
+            },
+            "indexByName": {
+              "Value #A": 4,
+              "Value #B": 3,
+              "component": 1,
+              "version": 2,
+              "week": 0
+            },
+            "renameByName": {
+              "Value #A": "Status",
+              "Value #B": "Build date",
+              "component": "Component",
+              "version": "Version",
+              "week": "Week"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Week"
+              },
+              {
+                "field": "Component"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "What each quarter released (read from the quarter build directories by emit_release_ledger.sh). Status: green 'built + scan OK' | red 'scan FAILED' | amber 'built, no scan yet' | grey 'not built yet'. The scan result is the latest scan of that exact version.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no quarter builds recorded yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "#d03b3b",
+                        "index": 1,
+                        "text": "scan FAILED"
+                      },
+                      "1": {
+                        "color": "#0ca30c",
+                        "index": 0,
+                        "text": "built + scan OK"
+                      },
+                      "2": {
+                        "color": "#fab219",
+                        "index": 2,
+                        "text": "built, no scan yet"
+                      },
+                      "3": {
+                        "color": "#8b8b85",
+                        "index": 3,
+                        "text": "not built yet"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Build date"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:DD MMM YYYY"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0,
+                        "text": ""
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 68
+      },
+      "id": 17,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "((release_build_info{stack=\"guac\",class=\"ccop\",quarter=~\"$quarter\",version!=\"-\"} * 0 + 1) * on(image, version) group_left() label_replace(pipeline_last_status{type=\"scan\"} * on(target) group_left(version) (pipeline_info{type=\"scan\"} * 0 + 1), \"image\", \"$1\", \"target\", \"(.*)\")) or ((release_build_info{stack=\"guac\",class=\"ccop\",quarter=~\"$quarter\",version!=\"-\"} * 0 + 2) unless on(image, version) label_replace(pipeline_last_status{type=\"scan\"} * on(target) group_left(version) (pipeline_info{type=\"scan\"} * 0 + 1), \"image\", \"$1\", \"target\", \"(.*)\")) or (release_build_info{stack=\"guac\",class=\"ccop\",quarter=~\"$quarter\",version=\"-\"} * 0 + 3)",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "release_build_info{stack=\"guac\",class=\"ccop\",quarter=~\"$quarter\"} * 1000",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "GUACAMOLE STACK \u00b7 QUARTER builds \u00b7 ccop (functional / dev)",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "class": true,
+              "host": true,
+              "image": true,
+              "instance": true,
+              "job": true,
+              "stack": true
+            },
+            "indexByName": {
+              "Value #A": 4,
+              "Value #B": 3,
+              "component": 1,
+              "quarter": 0,
+              "version": 2
+            },
+            "renameByName": {
+              "Value #A": "Status",
+              "Value #B": "Build date",
+              "component": "Component",
+              "quarter": "Quarter",
+              "version": "Version"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Quarter"
+              },
+              {
+                "field": "Component"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Weekly canary builds (weekly_build_<component> roles). Week = ISO week number of the year. Version = the upstream version built that week, so version changes show up from week to week. Status: green 'built + scan OK' | red 'FAILED' | amber 'waiting on staging' | orange 'not completed' (an earlier step failed). The newest four weeks are kept.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no weekly builds recorded yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "#d03b3b",
+                        "index": 1,
+                        "text": "FAILED"
+                      },
+                      "1": {
+                        "color": "#0ca30c",
+                        "index": 0,
+                        "text": "built + scan OK"
+                      },
+                      "2": {
+                        "color": "#fab219",
+                        "index": 2,
+                        "text": "waiting on staging"
+                      },
+                      "3": {
+                        "color": "#ec835a",
+                        "index": 3,
+                        "text": "not completed"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Build date"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:DD MMM YYYY"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 68
+      },
+      "id": 18,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_weekly_build{stack=\"guac\",class=\"ccop\"}",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_weekly_build_timestamp_seconds{stack=\"guac\",class=\"ccop\"} * 1000",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "GUACAMOLE STACK \u00b7 WEEKLY builds \u00b7 ccop (functional / dev)",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "class": true,
+              "host": true,
+              "instance": true,
+              "job": true,
+              "quarter": true,
+              "stack": true
+            },
+            "indexByName": {
+              "Value #A": 4,
+              "Value #B": 3,
+              "component": 1,
+              "version": 2,
+              "week": 0
+            },
+            "renameByName": {
+              "Value #A": "Status",
+              "Value #B": "Build date",
+              "component": "Component",
+              "version": "Version",
+              "week": "Week"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Week"
+              },
+              {
+                "field": "Component"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "What each quarter released (read from the quarter build directories by emit_release_ledger.sh). Status: green 'built + scan OK' | red 'scan FAILED' | amber 'built, no scan yet' | grey 'not built yet'. The scan result is the latest scan of that exact version.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no quarter builds recorded yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "#d03b3b",
+                        "index": 1,
+                        "text": "scan FAILED"
+                      },
+                      "1": {
+                        "color": "#0ca30c",
+                        "index": 0,
+                        "text": "built + scan OK"
+                      },
+                      "2": {
+                        "color": "#fab219",
+                        "index": 2,
+                        "text": "built, no scan yet"
+                      },
+                      "3": {
+                        "color": "#8b8b85",
+                        "index": 3,
+                        "text": "not built yet"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Build date"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:DD MMM YYYY"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0,
+                        "text": ""
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 76
+      },
+      "id": 19,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "((release_build_info{stack=\"guac\",class=\"nucleus\",quarter=~\"$quarter\",version!=\"-\"} * 0 + 1) * on(image, version) group_left() label_replace(pipeline_last_status{type=\"scan\"} * on(target) group_left(version) (pipeline_info{type=\"scan\"} * 0 + 1), \"image\", \"$1\", \"target\", \"(.*)\")) or ((release_build_info{stack=\"guac\",class=\"nucleus\",quarter=~\"$quarter\",version!=\"-\"} * 0 + 2) unless on(image, version) label_replace(pipeline_last_status{type=\"scan\"} * on(target) group_left(version) (pipeline_info{type=\"scan\"} * 0 + 1), \"image\", \"$1\", \"target\", \"(.*)\")) or (release_build_info{stack=\"guac\",class=\"nucleus\",quarter=~\"$quarter\",version=\"-\"} * 0 + 3)",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "release_build_info{stack=\"guac\",class=\"nucleus\",quarter=~\"$quarter\"} * 1000",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "GUACAMOLE STACK \u00b7 QUARTER builds \u00b7 nucleus (hardened)",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "class": true,
+              "host": true,
+              "image": true,
+              "instance": true,
+              "job": true,
+              "stack": true
+            },
+            "indexByName": {
+              "Value #A": 4,
+              "Value #B": 3,
+              "component": 1,
+              "quarter": 0,
+              "version": 2
+            },
+            "renameByName": {
+              "Value #A": "Status",
+              "Value #B": "Build date",
+              "component": "Component",
+              "quarter": "Quarter",
+              "version": "Version"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Quarter"
+              },
+              {
+                "field": "Component"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Weekly canary builds (weekly_build_<component> roles). Week = ISO week number of the year. Version = the upstream version built that week, so version changes show up from week to week. Status: green 'built + scan OK' | red 'FAILED' | amber 'waiting on staging' | orange 'not completed' (an earlier step failed). The newest four weeks are kept.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "noValue": "no weekly builds recorded yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "#d03b3b",
+                        "index": 1,
+                        "text": "FAILED"
+                      },
+                      "1": {
+                        "color": "#0ca30c",
+                        "index": 0,
+                        "text": "built + scan OK"
+                      },
+                      "2": {
+                        "color": "#fab219",
+                        "index": 2,
+                        "text": "waiting on staging"
+                      },
+                      "3": {
+                        "color": "#ec835a",
+                        "index": 3,
+                        "text": "not completed"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Build date"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:DD MMM YYYY"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 76
+      },
+      "id": 20,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_weekly_build{stack=\"guac\",class=\"nucleus\"}",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "pipeline_weekly_build_timestamp_seconds{stack=\"guac\",class=\"nucleus\"} * 1000",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "GUACAMOLE STACK \u00b7 WEEKLY builds \u00b7 nucleus (hardened)",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "class": true,
+              "host": true,
+              "instance": true,
+              "job": true,
+              "quarter": true,
+              "stack": true
+            },
+            "indexByName": {
+              "Value #A": 4,
+              "Value #B": 3,
+              "component": 1,
+              "version": 2,
+              "week": 0
+            },
+            "renameByName": {
+              "Value #A": "Status",
+              "Value #B": "Build date",
+              "component": "Component",
+              "version": "Version",
+              "week": "Week"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Week"
+              },
+              {
+                "field": "Component"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Pick what to show with the 'Scan results' dropdown at the top. One row per image; images are never added together.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "no scan data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Critical"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#d03b3b",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "High"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#ec835a",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Medium"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#fab219",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Low"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8b8b85",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 84
+      },
+      "id": 21,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "sum by (image, bucket) (label_replace(label_replace(label_replace(label_replace(${view}{image=~\"ccop/.+\",image!~\".*(debian13-node20)\"}, \"bucket\", \"$1\", \"severity\", \"(.+)\"), \"bucket\", \"$1\", \"state\", \"(.+)\"), \"bucket\", \"$1\", \"disposition\", \"(.+)\"), \"bucket\", \"$1\", \"group\", \"(.+)\"))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "${view:text} by image \u00b7 ccop (latest scan)",
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "bucket",
+            "rowField": "image",
+            "valueField": "Value"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "indexByName": {
+              "Critical": 1,
+              "High": 2,
+              "Low": 4,
+              "Medium": 3,
+              "Negligible": 5,
+              "Unknown": 6,
+              "image\\bucket": 0
+            },
+            "renameByName": {
+              "image\\bucket": "Image"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Pick what to show with the 'Scan results' dropdown at the top. One row per image; images are never added together.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "no scan data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Critical"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#d03b3b",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "High"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#ec835a",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Medium"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#fab219",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Low"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8b8b85",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 84
+      },
+      "id": 22,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "sum by (image, bucket) (label_replace(label_replace(label_replace(label_replace(${view}{image=~\"nucleus/.+\",image!~\".*(debian13-node20)\"}, \"bucket\", \"$1\", \"severity\", \"(.+)\"), \"bucket\", \"$1\", \"state\", \"(.+)\"), \"bucket\", \"$1\", \"disposition\", \"(.+)\"), \"bucket\", \"$1\", \"group\", \"(.+)\"))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "${view:text} by image \u00b7 nucleus (latest scan)",
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "bucket",
+            "rowField": "image",
+            "valueField": "Value"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "indexByName": {
+              "Critical": 1,
+              "High": 2,
+              "Low": 4,
+              "Medium": 3,
+              "Negligible": 5,
+              "Unknown": 6,
+              "image\\bucket": 0
+            },
+            "renameByName": {
+              "image\\bucket": "Image"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Pick what to show with the 'Scan results' dropdown at the top. One row per image; images are never added together.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "no scan data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Critical"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#d03b3b",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "High"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#ec835a",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Medium"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#fab219",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Low"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#8b8b85",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 84
+      },
+      "id": 23,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "sum by (image, bucket) (label_replace(label_replace(label_replace(label_replace(${view}{image=~\"container-forge/.+\",image!~\".*(debian13-node20)\"}, \"bucket\", \"$1\", \"severity\", \"(.+)\"), \"bucket\", \"$1\", \"state\", \"(.+)\"), \"bucket\", \"$1\", \"disposition\", \"(.+)\"), \"bucket\", \"$1\", \"group\", \"(.+)\"))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "${view:text} by image \u00b7 container-forge base images (latest scan)",
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "bucket",
+            "rowField": "image",
+            "valueField": "Value"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "indexByName": {
+              "Critical": 1,
+              "High": 2,
+              "Low": 4,
+              "Medium": 3,
+              "Negligible": 5,
+              "Unknown": 6,
+              "image\\bucket": 0
+            },
+            "renameByName": {
+              "image\\bucket": "Image"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Worst findings across this pipeline's images, ranked by severity then CVSS. 'Package' says what it pertains to; 'Images' is how many images carry it.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "no scan data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Severity"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "Critical": {
+                        "color": "#d03b3b",
+                        "index": 0
+                      },
+                      "High": {
+                        "color": "#ec835a",
+                        "index": 1
+                      },
+                      "Low": {
+                        "color": "#8b8b85",
+                        "index": 3
+                      },
+                      "Medium": {
+                        "color": "#fab219",
+                        "index": 2
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 0,
+        "y": 93
+      },
+      "id": 24,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "topk(10, max by (cve, package, severity, cvss, fix_state) (image_top_vuln{image=~\"ccop/.+\",image!~\".*(debian13-node20)\"}))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "count by (cve, package, severity, cvss, fix_state) (image_top_vuln{image=~\"ccop/.+\",image!~\".*(debian13-node20)\"}) and on(cve, package, severity, cvss, fix_state) topk(10, max by (cve, package, severity, cvss, fix_state) (image_top_vuln{image=~\"ccop/.+\",image!~\".*(debian13-node20)\"}))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "TOP 10 vulnerabilities \u00b7 ccop",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Value #A"
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value #A": true,
+              "__name__": true,
+              "host": true,
+              "image": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {
+              "Value #B": 5,
+              "cve": 0,
+              "cvss": 3,
+              "fix_state": 4,
+              "package": 1,
+              "severity": 2
+            },
+            "renameByName": {
+              "Value #B": "Images",
+              "cve": "CVE",
+              "cvss": "CVSS",
+              "fix_state": "Fix",
+              "package": "Package",
+              "severity": "Severity"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Worst findings across this pipeline's images, ranked by severity then CVSS. 'Package' says what it pertains to; 'Images' is how many images carry it.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "no scan data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Severity"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "Critical": {
+                        "color": "#d03b3b",
+                        "index": 0
+                      },
+                      "High": {
+                        "color": "#ec835a",
+                        "index": 1
+                      },
+                      "Low": {
+                        "color": "#8b8b85",
+                        "index": 3
+                      },
+                      "Medium": {
+                        "color": "#fab219",
+                        "index": 2
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 8,
+        "y": 93
+      },
+      "id": 25,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "topk(10, max by (cve, package, severity, cvss, fix_state) (image_top_vuln{image=~\"nucleus/.+\",image!~\".*(debian13-node20)\"}))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "count by (cve, package, severity, cvss, fix_state) (image_top_vuln{image=~\"nucleus/.+\",image!~\".*(debian13-node20)\"}) and on(cve, package, severity, cvss, fix_state) topk(10, max by (cve, package, severity, cvss, fix_state) (image_top_vuln{image=~\"nucleus/.+\",image!~\".*(debian13-node20)\"}))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "TOP 10 vulnerabilities \u00b7 nucleus",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Value #A"
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value #A": true,
+              "__name__": true,
+              "host": true,
+              "image": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {
+              "Value #B": 5,
+              "cve": 0,
+              "cvss": 3,
+              "fix_state": 4,
+              "package": 1,
+              "severity": 2
+            },
+            "renameByName": {
+              "Value #B": "Images",
+              "cve": "CVE",
+              "cvss": "CVSS",
+              "fix_state": "Fix",
+              "package": "Package",
+              "severity": "Severity"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ds-prometheus"
+      },
+      "description": "Last run / last success are 'how long ago'. 'Due every' is how often the job should run (on demand = no schedule). 'Overdue by' stays 0 until a scheduled job misses its slot.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "no data yet",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Due every"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0,
+                        "text": "on demand"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Overdue by"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#0ca30c",
+                      "value": 0
+                    },
+                    {
+                      "color": "#d03b3b",
+                      "value": 1
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 16,
+        "y": 93
+      },
+      "id": 26,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.11",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "label_join(time() - pipeline_last_run_timestamp_seconds{target!=\"setup\",target!~\"debian13-node20\"}, \"job_step\", \" / \", \"type\", \"target\")",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "label_join((time() - pipeline_last_success_timestamp_seconds{target!=\"setup\",target!~\"debian13-node20\"}) and (pipeline_last_success_timestamp_seconds{target!=\"setup\",target!~\"debian13-node20\"} > 0), \"job_step\", \" / \", \"type\", \"target\")",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "label_join(pipeline_expected_interval_seconds{target!=\"setup\",target!~\"debian13-node20\"} + 0, \"job_step\", \" / \", \"type\", \"target\")",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ds-prometheus"
+          },
+          "expr": "label_join(clamp_min(time() - pipeline_last_run_timestamp_seconds{target!=\"setup\",target!~\"debian13-node20\"} - pipeline_expected_interval_seconds{target!=\"setup\",target!~\"debian13-node20\"}, 0) and (pipeline_expected_interval_seconds{target!=\"setup\",target!~\"debian13-node20\"} > 0), \"job_step\", \" / \", \"type\", \"target\")",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "D"
+        }
+      ],
+      "title": "JOB FRESHNESS \u00b7 when did each job last run?",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "Value #D"
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "host": true,
+              "instance": true,
+              "job": true,
+              "target": true,
+              "type": true
+            },
+            "indexByName": {
+              "Value #A": 1,
+              "Value #B": 2,
+              "Value #C": 3,
+              "Value #D": 4,
+              "job_step": 0
+            },
+            "renameByName": {
+              "Value #A": "Last run",
+              "Value #B": "Last success",
+              "Value #C": "Due every",
+              "Value #D": "Overdue by",
+              "job_step": "Job"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "refresh": "1m",
+  "schemaVersion": 42,
+  "tags": [
+    "pipeline",
+    "containers"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": ".+",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "ds-prometheus"
+        },
+        "definition": "label_values(release_build_info, quarter)",
+        "includeAll": true,
+        "label": "Quarter",
+        "multi": true,
+        "name": "quarter",
+        "options": [],
+        "query": {
+          "query": "label_values(release_build_info, quarter)",
+          "refId": "q"
+        },
+        "refresh": 2,
+        "regexApplyTo": "value",
+        "sort": 2,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "image_vulns",
+          "value": "image_vulns"
+        },
+        "includeAll": false,
+        "label": "Scan results",
+        "name": "view",
+        "options": [],
+        "query": "Findings by severity : image_vulns, Fix availability : image_vuln_fix_state, Compensating controls : image_compensating_groups, Leftover files : image_leftover_files",
+        "type": "custom",
+        "valuesFormat": "csv"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Nucleus Pipelines Status",
+  "uid": "pipeline-status",
+  "version": 5,
+  "weekStart": ""
+}

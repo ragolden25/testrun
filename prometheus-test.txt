@@ -1,0 +1,18 @@
+Thanks for pasting this. I should have looked at those checks on Thursday, not just the playbook exit code. 
+The fallback itself worked for real: Prometheus couldn’t get a version, 
+so the build released last quarter’s 3.14.0, the signatures verified, and the compose file picked it up.
+But there are four real problems behind the six failed checks:
+
+Prometheus version detection is broken. It failed at “version found”, so the version it read from the staged inventory.env wasn’t a plain number. 
+My guess is the key is written differently in the Prometheus file, with quotes or a leading v. This is the important one: on Jan 1, 
+Prometheus would silently stay on 3.14.0 every quarter.
+The forced iDRAC failure never triggered, so iDRAC built normally. The fallback was meant to be tested on iDRAC, and that test didn’t happen. 
+Prometheus failing by accident tested it instead.
+Repeated scans: when a component falls back, it copies every scan run fy27q1 piled up for that version, from before provenance was reset each build. 
+It should copy only the newest run. I’ll fix that in fallback.yml.
+fy27q1 changed during the run. The test should never touch the current quarter. I need to see which files changed. The test script also threw away its 
+before/after listing, so I’ll make it write the differences into the log.
+
+To pin down 1, 2 and 4, run this on ansible-forge and paste the output:
+
+L=/opt/ansible/logs/test_grafana_split-2026-11-06-1319.log; cat -A /opt/ansible/build/grafana_stack/prometheus/fy27q1/staged/inventory.env; echo ==; grep -nE 'no usable version|forced failure|force_fail' $L | head; echo ==; find /opt/ansible/files/grafana/fy27q1 -newermt '2026-11-06 13:19' ! -newermt '2026-11-06 15:00' -printf '%TT %P\n' | sort | head -30

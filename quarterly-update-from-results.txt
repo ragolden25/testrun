@@ -1,0 +1,20 @@
+Prometheus version: the staging script writes the version in quotes ("3.15.1"), so the version check rejected it. The role now strips the quotes and matches only the exact key at the start of a line. With your current file it reads 3.16.0. On Jan 1 this would have kept Prometheus on 3.14.0 every quarter.
+
+The forced iDRAC failure: the log has no trace of the “forced failure” task at all, so the copy of quarterly_common installed on ansible-forge is an older version without it. The tarball replaces the whole role with the current one.
+
+fy27q1 changed: universal_container_scan.sh works out the quarter from the calendar, so the test’s Grafana, iDRAC and nginx scans went into fy27q1 instead of fy27q1test. In production the two are the same quarter, so this only affects test quarters. The role now passes the quarter being built, and the script needs one line to use it.
+
+Repeated scans: when a component falls back, it now copies only the newest scan run from the previous quarter.
+
+Run these as ansible on ansible-forge, from the folder holding the two files:
+
+tar -xzf quarterly-common-fix.tar.gz -C / --no-same-owner --no-overwrite-dir -m
+sed -i '/^QUARTER=\$(echo "\$Q_OUT"/a [ -n "${SCAN_QUARTER:-}" ] \&\& QUARTER="$SCAN_QUARTER"   # quarter being built (quarterly_common scan.yml), e.g. a test quarter' /opt/ansible/files/common/scripts/universal_container_scan.sh
+D=/opt/ansible/molecule/backups/fy27q1-test-scans; mkdir -p $D; sudo find /opt/ansible/files/grafana/fy27q1/provenance/{ccop,nucleus} -maxdepth 1 -type f -newermt '2026-11-06 13:19' ! -newermt '2026-11-06 15:00' -exec mv -t $D {} +
+bash test_grafana_split.sh
+
+Line 2 adds the one line to the scan script.
+Line 3 moves last Thursday’s stray test scans out of fy27q1 into a backup folder; nothing is deleted.
+Line 4 reruns the test quarter. It takes about 40 minutes. This time Prometheus should build 3.16.0, iDRAC should fall back, and all 12 checks should pass. If anything in fy27q1 changes during the run, the output now lists the files.
+
+When it’s clean, run bash test_grafana_split.sh --cleanup and close the ticket.

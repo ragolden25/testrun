@@ -18,3 +18,56 @@ Line 3 moves last Thursday’s stray test scans out of fy27q1 into a backup fold
 Line 4 reruns the test quarter. It takes about 40 minutes. This time Prometheus should build 3.16.0, iDRAC should fall back, and all 12 checks should pass. If anything in fy27q1 changes during the run, the output now lists the files.
 
 When it’s clean, run bash test_grafana_split.sh --cleanup and close the ticket.
+
+
+[ansible@ansible-forge ~]$ tar -xzf quarterly-common-fix.tar.gz -C / --no-same-owner --no-overwrite-dir -m
+sed -i '/^QUARTER=\$(echo "\$Q_OUT"/a [ -n "${SCAN_QUARTER:-}" ] \&\& QUARTER="$SCAN_QUARTER"   # quarter being built (quarterly_common scan.yml), e.g. a test quarter' /opt/ansible/files/common/scripts/universal_container_scan.sh
+D=/opt/ansible/molecule/backups/fy27q1-test-scans; mkdir -p $D; sudo find /opt/ansible/files/grafana/fy27q1/provenance/{ccop,nucleus} -maxdepth 1 -type f -newermt '2026-11-06 13:19' ! -newermt '2026-11-06 15:00' -exec mv -t $D {} +
+bash test_grafana_split.sh
+== test quarter fy27q1test, seeded from fy27q1 (log: /opt/ansible/logs/test_grafana_split-2026-11-10-1057.log)
+
+== playbook exit 0
+   grafana: built 12.4.14
+   prometheus: built 3.16.0
+   idrac: FALLBACK to 2.6.3 from fy27q1 (failed at Quarterly - forced failure (test runs only, quarterly_force_fail))
+   nginx_grafana: built 1.31.8
+
+== versions.env
+   GRAFANA_VERSION=12.4.14
+   PROMETHEUS_VERSION=3.16.0
+   NGINX_VERSION=1.31.8
+   IDRAC_VERSION=2.6.3
+== fallback.env
+   # Components released from an earlier quarter (fy27q1test). No lines below = all built this quarter.
+   IDRAC_VERSION=2.6.3 fallback from=fy27q1 failed_at="Quarterly - forced failure (test runs only, quarterly_force_fail)"
+== compose images
+   image: "nucleus/grafana:12.4.14"
+   image: "nucleus/prometheus:3.16.0"
+   image: "nucleus/nginx:1.31.8"
+   image: "nucleus/idrac:2.6.3"
+
+== checks
+   OK    playbook succeeded
+   OK    grafana, prometheus, nginx built this run
+   OK    idrac fell back to the fy27q1 release
+   OK    fallback.env lists idrac only
+   OK    8 images delivered (ccop + nucleus x 4)
+   OK    idrac image is the fy27q1 one, byte for byte
+   OK    every image signature verifies
+   OK    no signatures left in ccop/, nucleus/, container-forge/
+   OK    one run of scans per built image (no repeats)
+   OK    every scan result from this run is signed
+   OK    docker-compose.yml rendered with idrac at the fallback version
+   FAIL  fy27q1 unchanged (every file, size and time)
+
+== files changed in fy27q1 during the run (full list: /opt/ansible/logs/test_grafana_split-2026-11-10-1057.log.fy27q1-changes)
+   > provenance/container-forge/container_forge_debian13_slim_latest_20261110T163016Z-openscap-report.html 30337652 1794328573.8468346360
+   > provenance/container-forge/container_forge_debian13_slim_latest_20261110T163016Z-openscap-results.xml 175642672 1794328566.3352112390
+   > provenance/container-forge/container_forge_debian13_slim_latest.20261110T163016Z.sbom.json 2446881 1794328225.7379446770
+   > provenance/container-forge/container_forge_debian13_slim_latest.20261110T163016Z.vuln.csv 16300 1794328346.9890074520
+   > provenance/container-forge/container_forge_debian13_slim_latest.20261110T163016Z.vuln.html 322208 1794328466.3289116220
+   > provenance/container-forge/container_forge_debian13_slim_latest.20261110T163016Z.vuln.json 1049153 1794328346.3199519260
+   > provenance/container-forge/container_forge_debian13_slim_latest.20261110T163016Z.vuln.normalized.csv 39352 1794328347.0320110210
+   > provenance/container-forge/scan_container_forge_debian13_slim_latest_20261110T163016Z.log 4944054 1794328580.0233472300
+
+== 11 passed, 1 failed. Test quarter kept at /opt/ansible/files/grafana/fy27q1test - remove it with: bash test_grafana_split.sh --cleanup

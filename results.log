@@ -1,0 +1,37 @@
+== test quarter fy27q1test, seeded from fy27q1 (log: /opt/ansible/logs/test_grafana_split-2026-11-06-1319.log)
+
+== playbook exit 0
+   grafana: built 12.4.14
+   prometheus: FALLBACK to 3.14.0 from fy27q1 (failed at Quarterly - version found)
+   idrac: built 2.6.3
+   nginx_grafana: built 1.31.8
+
+== versions.env
+   GRAFANA_VERSION=12.4.14
+   PROMETHEUS_VERSION=3.14.0
+   NGINX_VERSION=1.31.8
+   IDRAC_VERSION=2.6.3
+== fallback.env
+   # Components released from an earlier quarter (fy27q1test). No lines below = all built this quarter.
+   PROMETHEUS_VERSION=3.14.0 fallback from=fy27q1 failed_at="Quarterly - version found"
+== compose images
+   image: "nucleus/grafana:12.4.14"
+   image: "nucleus/prometheus:3.14.0"
+   image: "nucleus/nginx:1.31.8"
+   image: "nucleus/idrac:2.6.3"
+
+== checks
+   OK    playbook succeeded
+   FAIL  grafana, prometheus, nginx built this run
+   FAIL  idrac fell back to the fy27q1 release
+   FAIL  fallback.env lists idrac only
+   OK    8 images delivered (ccop + nucleus x 4)
+   FAIL  idrac image is the fy27q1 one, byte for byte
+   OK    every image signature verifies
+   OK    no signatures left in ccop/, nucleus/, container-forge/
+   FAIL  one run of scans per built image (no repeats)
+   OK    every scan result from this run is signed
+   OK    docker-compose.yml rendered with idrac at the fallback version
+   FAIL  fy27q1 unchanged (every file, size and time)
+
+== 6 passed, 6 failed. 

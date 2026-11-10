@@ -16,3 +16,45 @@ before/after listing, so I’ll make it write the differences into the log.
 To pin down 1, 2 and 4, run this on ansible-forge and paste the output:
 
 L=/opt/ansible/logs/test_grafana_split-2026-11-06-1319.log; cat -A /opt/ansible/build/grafana_stack/prometheus/fy27q1/staged/inventory.env; echo ==; grep -nE 'no usable version|forced failure|force_fail' $L | head; echo ==; find /opt/ansible/files/grafana/fy27q1 -newermt '2026-11-06 13:19' ! -newermt '2026-11-06 15:00' -printf '%TT %P\n' | sort | head -30
+
+
+
+[ansible@ansible-forge ~]$ L=/opt/ansible/logs/test_grafana_split-2026-11-06-1319.log; cat -A /opt/ansibl                              e/build/grafana_stack/prometheus/fy27q1/staged/inventory.env; echo ==; grep -nE 'no usable version|forced                               failure|force_fail' $L | head; echo ==; find /opt/ansible/files/grafana/fy27q1 -newermt '2026-11-06 13:1                              9' ! -newermt '2026-11-06 15:00' -printf '%TT %P\n' | sort | head -30
+STAGED_PROMETHEUS_VERSION="3.16.0"$
+LATEST_STAGED_PROMETHEUS_VERSION="3.16.0"$
+STAGED_TIMESTAMP="2026-11-08T02:06:10-05:00"$
+STAGED_AT="2026-11-08T07:06:10Z"$
+==
+225:    "msg": "no usable version for prometheus (got '\"3.15.1\"')"
+233:    "msg": "prometheus \"3.15.1\" failed at 'Quarterly - version found': no usable version for promet                              heus (got '\"3.15.1\"'). Falling back to the last good release from fy27q1."
+==
+13:27:43.8052650800 provenance/nucleus/nucleus_grafana_12_4_14.20261106T182502Z.sbom.json
+13:27:51.3898962830 provenance/ccop/ccop_grafana_12_4_14.20261106T182502Z.sbom.json
+13:31:19.1521865410 provenance/nucleus/nucleus_grafana_12_4_14.20261106T182502Z.vuln.json
+13:31:19.9362517920 provenance/nucleus/nucleus_grafana_12_4_14.20261106T182502Z.vuln.csv
+13:31:19.9552533730 provenance/nucleus/nucleus_grafana_12_4_14.20261106T182502Z.vuln.normalized.csv
+13:31:26.3847884480 provenance/ccop/ccop_grafana_12_4_14.20261106T182502Z.vuln.json
+13:31:27.0138407990 provenance/ccop/ccop_grafana_12_4_14.20261106T182502Z.vuln.csv
+13:31:27.0648450440 provenance/ccop/ccop_grafana_12_4_14.20261106T182502Z.vuln.normalized.csv
+13:34:52.0799066810 provenance/nucleus/nucleus_grafana_12_4_14.20261106T182502Z.vuln.html
+13:35:04.7699627640 provenance/ccop/ccop_grafana_12_4_14.20261106T182502Z.vuln.html
+13:38:49.0386267030 provenance/nucleus/nucleus_grafana_12_4_14_20261106T182502Z-openscap-results.xml
+13:38:56.0412094680 provenance/nucleus/nucleus_grafana_12_4_14_20261106T182502Z-openscap-report.html
+13:38:59.5975054280 provenance/nucleus/scan_nucleus_grafana_12_4_14_20261106T182502Z.log
+13:39:04.9269489520 provenance/ccop/ccop_grafana_12_4_14_20261106T182502Z-openscap-results.xml
+13:39:12.7786023780 provenance/ccop/ccop_grafana_12_4_14_20261106T182502Z-openscap-report.html
+13:39:20.3222301680 provenance/ccop/scan_ccop_grafana_12_4_14_20261106T182502Z.log
+13:40:52.5089020730 provenance/nucleus/nucleus_idrac_2_6_3.20261106T184042Z.sbom.json
+13:40:54.7550890040 provenance/ccop/ccop_idrac_2_6_3.20261106T184042Z.sbom.json
+13:44:26.6207073200 provenance/nucleus/nucleus_idrac_2_6_3.20261106T184042Z.vuln.json
+13:44:27.1967551900 provenance/nucleus/nucleus_idrac_2_6_3.20261106T184042Z.vuln.csv
+13:44:27.2167568530 provenance/nucleus/nucleus_idrac_2_6_3.20261106T184042Z.vuln.normalized.csv
+13:44:29.7809699410 provenance/ccop/ccop_idrac_2_6_3.20261106T184042Z.vuln.json
+13:44:30.3980212190 provenance/ccop/ccop_idrac_2_6_3.20261106T184042Z.vuln.csv
+13:44:30.4340242110 provenance/ccop/ccop_idrac_2_6_3.20261106T184042Z.vuln.normalized.csv
+13:48:02.7026639650 provenance/nucleus/nucleus_idrac_2_6_3.20261106T184042Z.vuln.html
+13:48:06.9130138500 provenance/ccop/ccop_idrac_2_6_3.20261106T184042Z.vuln.html
+13:49:34.1952670950 provenance/nucleus/nucleus_idrac_2_6_3_20261106T184042Z-openscap-results.xml
+13:49:40.8618210920 provenance/nucleus/nucleus_idrac_2_6_3_20261106T184042Z-openscap-report.html
+13:49:44.6071323320 provenance/ccop/ccop_idrac_2_6_3_20261106T184042Z-openscap-results.xml
+13:49:46.2432682960 provenance/nucleus/scan_nucleus_idrac_2_6_3_20261106T184042Z.log

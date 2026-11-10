@@ -70,4 +70,8 @@ bash test_grafana_split.sh
    > provenance/container-forge/container_forge_debian13_slim_latest.20261110T163016Z.vuln.normalized.csv 39352 1794328347.0320110210
    > provenance/container-forge/scan_container_forge_debian13_slim_latest_20261110T163016Z.log 4944054 1794328580.0233472300
 
+
+sed -i '/^    export TMPDIR=\/opt\/ansible\/molecule\/scans\/tmp$/a \    export SCAN_QUARTER={{ quarter }}   # scan into the quarter being built (a test quarter too)' /opt/ansible/nucleus/roles/build_grafana_stack/tasks/stack_finish.yml
+sudo find /opt/ansible/files/grafana/fy27q1/provenance/container-forge -maxdepth 1 -type f -name '*20261110T163016Z*' -exec mv -t /opt/ansible/molecule/backups/fy27q1-test-scans {} +
+bash test_grafana_split.sh --cleanup
 == 11 passed, 1 failed. Test quarter kept at /opt/ansible/files/grafana/fy27q1test - remove it with: bash test_grafana_split.sh --cleanup
